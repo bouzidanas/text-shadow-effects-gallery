@@ -2,7 +2,9 @@
 
 This is an open-source gallery app showcasing various long shadow text effects. This project is built to demonstrate the capabilities of a few JavaScript scripts that dynamically generate and apply long shadow styles to text elements.
 
-A live demo of this project can be found here: [add your link here]
+![Gallery Screenshot](./public/assets/gallery-screenshot.png)
+
+A live demo of this project can be found here: [Live Demo](https://text-shadow-effects-gallery.vercel.app/)
 
 ## 🚧 Disclaimer: Work in Progress 🚧
 
@@ -20,9 +22,9 @@ This gallery primarily showcases three main scripts that use a combination of Ja
 
 This application is built using modern web technologies:
 
-*   [React](httpss://reactjs.org/)
-*   [TypeScript](httpss://www.typescriptlang.org/)
-*   [Vite](httpss://vitejs.dev/)
+*   [React](https://reactjs.org/)
+*   [TypeScript](https://www.typescriptlang.org/)
+*   [Vite](https://vitejs.dev/)
 
 ## -- Future Plans
 
@@ -53,6 +55,6 @@ Your app is ready to be deployed!
 
 ## -- Deployment
 
-This application is deployed and hosted on [Vercel](httpss://vercel.com/).
+This application is deployed and hosted on [Vercel](https://text-shadow-effects-gallery.vercel.app/).
 
 
