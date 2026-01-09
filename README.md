@@ -31,7 +31,7 @@ Some exciting plans for the future of this project:
 *   **Consolidation:** Consolidate `infinite-shadow.js` script with `striped-shadow-simplified.js` and `striped-shadow-animated-web-api.js` to create two scripts: one for non-animated/static long shadow effects and another for animated long shadow effects.
 *   **Installable Packages:** Create easy-to-use, installable NPM packages that will allow developers to integrate these long shadow effects into their own projects with minimal setup.
 
-## Available Scripts
+## -- Available Scripts
 
 In the project directory, you can run:
 
@@ -51,7 +51,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
-## Deployment
+## -- Deployment
 
 This application is deployed and hosted on [Vercel](httpss://vercel.com/).
 
