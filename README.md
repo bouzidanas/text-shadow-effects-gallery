@@ -8,7 +8,7 @@ A live demo of this project can be found here: [add your link here]
 
 The text shadow effect scripts located in the `src/effects` folder are currently under development and are **not ready for use in production environments**. This project is a proof of concept and a work in progress.
 
-## ✨ About the Effects
+## -- About the Effects
 
 This gallery primarily showcases three main scripts that use a combination of JavaScript and CSS (via style injection) to create beautiful long shadow effects:
 
@@ -16,7 +16,7 @@ This gallery primarily showcases three main scripts that use a combination of Ja
 2.  **Striped Shadow (Animated):** An animated version of the striped shadow effect.
 3.  **Infinite Shadow:** An effect that creates a very long, continuous shadow.
 
-## 🛠️ Built With
+## -- Built With
 
 This application is built using modern web technologies:
 
@@ -24,7 +24,7 @@ This application is built using modern web technologies:
 *   [TypeScript](httpss://www.typescriptlang.org/)
 *   [Vite](httpss://vitejs.dev/)
 
-## 🚀 Future Plans
+## -- Future Plans
 
 Some exciting plans for the future of this project:
 
