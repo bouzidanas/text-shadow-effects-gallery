@@ -2,7 +2,7 @@
 
 This is an open-source gallery app showcasing various long shadow text effects. This project is built to demonstrate the capabilities of a few JavaScript scripts that dynamically generate and apply long shadow styles to text elements.
 
-![Gallery Screenshot](./public/assets/gallery-screenshot.png)
+![Gallery Screenshot](public/assets/gallery-screenshot.png)
 
 A live demo of this project can be found here: [Live Demo](https://text-shadow-effects-gallery.vercel.app/)
 
