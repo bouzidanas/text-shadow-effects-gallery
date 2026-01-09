@@ -1,6 +1,35 @@
 # Long Shadow Effects Gallery
 
-This project is a gallery to showcase different long shadow effects created with JavaScript.
+This is an open-source gallery app showcasing various long shadow text effects. This project is built to demonstrate the capabilities of a few JavaScript scripts that dynamically generate and apply long shadow styles to text elements.
+
+A live demo of this project can be found here: [add your link here]
+
+## 🚧 Disclaimer: Work in Progress 🚧
+
+The text shadow effect scripts located in the `src/effects` folder are currently under development and are **not ready for use in production environments**. This project is a proof of concept and a work in progress.
+
+## ✨ About the Effects
+
+This gallery primarily showcases three main scripts that use a combination of JavaScript and CSS (via style injection) to create beautiful long shadow effects:
+
+1.  **Striped Shadow (Simplified):** A non-animated version of the striped shadow effect.
+2.  **Striped Shadow (Animated):** An animated version of the striped shadow effect.
+3.  **Infinite Shadow:** An effect that creates a very long, continuous shadow.
+
+## 🛠️ Built With
+
+This application is built using modern web technologies:
+
+*   [React](httpss://reactjs.org/)
+*   [TypeScript](httpss://www.typescriptlang.org/)
+*   [Vite](httpss://vitejs.dev/)
+
+## 🚀 Future Plans
+
+Some exciting plans for the future of this project:
+
+*   **Consolidation:** Consolidate `infinite-shadow.js` script with `striped-shadow-simplified.js` and `striped-shadow-animated-web-api.js` to create two scripts: one for non-animated/static long shadow effects and another for animated long shadow effects.
+*   **Installable Packages:** Create easy-to-use, installable NPM packages that will allow developers to integrate these long shadow effects into their own projects with minimal setup.
 
 ## Available Scripts
 
@@ -21,4 +50,9 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
+
+## Deployment
+
+This application is deployed and hosted on [Vercel](httpss://vercel.com/).
+
 
