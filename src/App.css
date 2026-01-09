@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fugaz+One&family=Shrikhand&display=swap');
+
+.App {
+	min-height: 100vh;
+	padding: 3rem 1.5rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.App > h1 {
+	text-align: center;
+	color: #4a5568;
+	font-size: 3rem;
+	font-weight: 600;
+	margin-bottom: 3rem;
+	letter-spacing: -0.03em;
+	font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.effects-section {
+	margin-bottom: 4rem;
+}
+
+.section-title {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	font-size: 1.5rem;
+	font-weight: 500;
+	color: #5a6c7d;
+	margin-bottom: 2rem;
+	padding-left: 0.5rem;
+	letter-spacing: -0.02em;
+	font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.section-title::after {
+	content: '';
+	flex-grow: 1;
+	height: 3px;
+	background-color: #eaeef3;
+}
+
+.effect-card {
+	background-color: #ffffff;
+	border-radius: 18px;
+	padding: 4rem 2rem;
+	margin: 0 auto 2rem;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	max-width: 1000px;
+	min-height: 500px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.effect-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.effect-content {
+	width: 100%;
+	text-align: center;
+}
+
+.effect-card h2 {
+	font-size: 5rem;
+	font-weight: 900;
+	margin-bottom: 1rem;
+	line-height: 1;
+}
+
+.card-header {
+	position: absolute;
+	top: 0.75rem;
+	left: 1.25rem;
+	right: 1.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	z-index: 10;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.effect-description {
+	font-size: 1.05rem;
+	color: rgba(0, 0, 0, 0.4);
+	margin: 0;
+	transition: color 0.3s ease;
+}
+
+.effect-card:hover .effect-description {
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.card-actions {
+	display: flex;
+	gap: 0.75rem;
+	flex-shrink: 0;
+}
+
+.code-toggle,
+.restart-toggle {
+	background: transparent;
+	border: none;
+	border-radius: 12px;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	color: rgba(0, 0, 0, 0.4);
+	padding: 0;
+}
+
+.code-toggle:hover,
+.restart-toggle:hover {
+	background: rgba(0, 0, 0, 0.05);
+	color: #333;
+	transform: scale(1.05);
+}
+
+.code-toggle:active,
+.restart-toggle:active {
+	transform: scale(0.95);
+}
+
+.code-overlay {
+	position: absolute;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.95);
+	backdrop-filter: blur(8px);
+	padding: 2rem;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	z-index: 100;
+	animation: fadeIn 0.2s ease;
+	cursor: pointer;
+	overflow: auto;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.close-overlay {
+	position: absolute;
+	top: 1.25rem;
+	right: 1.25rem;
+	background: rgba(255, 255, 255, 0.1);
+	border: none;
+	border-radius: 12px;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 110;
+	transition: all 0.2s ease;
+	color: white;
+	padding: 0;
+}
+
+.close-overlay:hover {
+	background: rgba(255, 255, 255, 0.2);
+	transform: scale(1.05);
+}
+
+.close-overlay:active {
+	transform: scale(0.95);
+}
+
+.code-content {
+	width: 100%;
+	max-width: 800px;
+	cursor: default;
+}
+
+.code-content pre {
+	margin: 0 !important;
+	font-size: 0.95rem !important;
+	max-height: none !important;
+	overflow: visible !important;
+}
+
+.code-content pre code {
+	display: block !important;
+}
+
+@media (max-width: 768px) {
+	.App {
+		padding: 2rem 1rem;
+	}
+
+	.App > h1 {
+		font-size: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	.effect-card {
+		padding: 3rem 1.5rem;
+		min-height: 300px;
+		margin-bottom: 2rem;
+	}
+
+	.effect-card h2 {
+		font-size: 3rem;
+	}
+
+	.effect-description {
+		font-size: 1rem;
+	}
+
+	.code-overlay {
+		padding: 1rem;
+	}
+
+	.code-content {
+		max-height: 70vh;
+	}
+
+	.code-content pre {
+		font-size: 0.85rem !important;
+	}
+}
+

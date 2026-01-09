@@ -1,0 +1,73 @@
+/* ==========================================================================
+   1. FONT IMPORT
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+
+/* ==========================================================================
+   2. BASIC LAYOUT & TYPOGRAPHY
+   ========================================================================== */
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #c4b19a;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-family: 'Titan One', sans-serif;
+    font-size: 11rem;
+    line-height: 1.2em;
+    margin: 0;
+    padding: 10px 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+    filter: 
+        drop-shadow(3px 0 0 white) 
+        drop-shadow(-3px 0 0 white) 
+        drop-shadow(0 3px 0 white) 
+        drop-shadow(0 -3px 0 white)
+        drop-shadow(3px 3px 0 white)
+        drop-shadow(-2px -2px 0 white)
+        drop-shadow(3px -2px 0 white)
+        drop-shadow(-2px 3px 0 white);
+}
+
+h1 span {
+    position: relative;
+    display: inline-block;
+}
+
+/* ==========================================================================
+   3. STACKING CONTEXT & LAYERING
+   ========================================================================== */
+
+.title-wrapper {
+    position: relative;
+    isolation: isolate;
+}
+
+/* ==========================================================================
+   4. ANIMATION PROPERTIES
+   ========================================================================== */
+
+@property --shadow-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
