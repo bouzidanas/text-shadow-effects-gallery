@@ -15,6 +15,8 @@ interface EffectConfig {
 	code: string;
 	backgroundColor: string;
 	textStyle?: React.CSSProperties;
+	cardStyle?: React.CSSProperties;
+	cardClassName?: string;
 }
 
 const INFINITE_SHADOW_CONFIG = {
@@ -189,15 +191,16 @@ const effects: EffectConfig[] = [
 		id: "layered-striped-shadow",
 		title: "LAYERS",
 		description: "A striped shadow effect with separated layers.",
-		className: "layered-striped-shadow-effect",
+		className: "layered-striped-shadow-effect with-grain",
 		backgroundColor: "#1698ef",
 		initEffect: () => applyStripedShadowSimplified(".layered-striped-shadow-effect", LAYERED_STRIPED_SHADOW_CONFIG),
 		code: `applyStripedShadow(".layered-striped-shadow-effect", ${JSON.stringify(LAYERED_STRIPED_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Fugaz One', sans-serif",
 			fontSize: "8rem",
-			lineHeight: "1.2em",
+			lineHeight: "1.2em"
 		},
+		cardClassName: "with-grain",
 	},
 	{
 		id: "striped-shadow-one-layer",
@@ -281,6 +284,8 @@ function App() {
 						onRestart={effect.restartEffect}
 						backgroundColor={effect.backgroundColor}
 						textStyle={effect.textStyle}
+						cardStyle={effect.cardStyle}
+						cardClassName={effect.cardClassName}
 					/>
 				))}
 			</section>
@@ -300,6 +305,8 @@ function App() {
 						onRestart={effect.restartEffect}
 						backgroundColor={effect.backgroundColor}
 						textStyle={effect.textStyle}
+						cardStyle={effect.cardStyle}
+						cardClassName={effect.cardClassName}
 					/>
 				))}
 			</section>

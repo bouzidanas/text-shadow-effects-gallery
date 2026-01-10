@@ -180,18 +180,12 @@ export function applyLongShadow(selector, options = {}) {
                 } else if (typeof config.boundaryElement === 'string') {
                     // Custom selector - search entire document
                     const boundaryEl = document.querySelector(config.boundaryElement);
-                    console.log('Boundary selector:', config.boundaryElement);
-                    console.log('Found element:', boundaryEl);
-                    console.log('Text container:', longShadowContainer);
-                    console.log('Contains check:', boundaryEl?.contains(longShadowContainer));
-                    console.log('Equals check:', boundaryEl === longShadowContainer);
                     
                     if (boundaryEl && (boundaryEl.contains(longShadowContainer) || boundaryEl === longShadowContainer)) {
                         // Element found and either contains or is the text element
                         const rect = boundaryEl.getBoundingClientRect();
                         boundaryWidth = rect.width;
                         boundaryHeight = rect.height;
-                        console.log('Using boundary dimensions:', { width: boundaryWidth, height: boundaryHeight, diagonal: Math.hypot(boundaryWidth, boundaryHeight) });
                     } else {
                         // Fallback to viewport if element not found or doesn't contain text
                         console.warn(`Boundary element "${config.boundaryElement}" not found or doesn't contain text element`);
@@ -206,7 +200,6 @@ export function applyLongShadow(selector, options = {}) {
                 
                 length = Math.hypot(boundaryWidth, boundaryHeight);
                 step = length / config.maxShadowLayers;
-                console.log('Calculated shadow length:', length, 'step:', step, 'max layers:', config.maxShadowLayers);
             }
 
             // Generate the shadow layers in a single, efficient loop.

@@ -12,6 +12,8 @@ interface EffectCardProps {
 	onRestart?: () => void;
 	backgroundColor: string;
 	textStyle?: React.CSSProperties;
+	cardStyle?: React.CSSProperties;
+	cardClassName?: string;
 }
 
 export default function EffectCard({
@@ -25,6 +27,8 @@ export default function EffectCard({
 	onRestart,
 	backgroundColor,
 	textStyle,
+	cardStyle,
+	cardClassName,
 }: EffectCardProps) {
 	const [showCode, setShowCode] = useState(false);
 
@@ -42,7 +46,7 @@ export default function EffectCard({
 	};
 
 	return (
-		<div className="effect-card" style={{ backgroundColor }} onMouseEnter={handleMouseEnter}>
+		<div className={`effect-card ${cardClassName || ''}`} style={{ backgroundColor, ...cardStyle }} onMouseEnter={handleMouseEnter}>
 			<div className="card-header">
 				<p className="effect-description">{description}</p>
 				<div className="card-actions">
