@@ -294,7 +294,7 @@ export function applyStripedShadow(selector, options = {}) {
                             requestAnimationFrame(shadowRenderLoop);
                         } else {
                             allShadowSpans.forEach(span => {
-                                span.style.setProperty('--shadow-scale', '1');
+                                span.style.removeProperty('--shadow-scale'); // Remove CSS variable entirely
                                 span.style.transform = ''; // Clear the transform after animation
                             });
                             updateShadow();
