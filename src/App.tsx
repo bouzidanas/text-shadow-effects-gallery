@@ -127,24 +127,6 @@ const OUTLINED_STRIPED_SHADOW_CONFIG = {
 
 const effects: EffectConfig[] = [
 	{
-		id: "infinite-shadow",
-		title: "Animated Infinite Shadow",
-		description: "An animated long shadow effect.",
-		className: "long-shadow-effect inside-card",
-		hasAnimation: true,
-		backgroundColor: "#e9928bff",
-		initEffect: () => applyLongShadow(".long-shadow-effect", INFINITE_SHADOW_CONFIG),
-		restartEffect: () => {
-			const element = document.querySelector(".long-shadow-effect.inside-card");
-			if (element) applyLongShadow(".long-shadow-effect.inside-card", INFINITE_SHADOW_CONFIG);
-		},
-		code: `applyLongShadow(".long-shadow-effect", ${JSON.stringify(INFINITE_SHADOW_CONFIG, null, 2)});`,
-		textStyle: {
-			fontFamily: "'Pacifico', cursive",
-			fontSize: "clamp(2.5rem, 8vw, 6rem)",
-		},
-	},
-	{
 		id: "web-api-animated-striped-shadow",
 		title: "Dynamic Striped Shadow",
 		description: "An animated striped shadow effect.",
@@ -256,6 +238,24 @@ const effects: EffectConfig[] = [
 			fontFamily: "'Titan One', sans-serif",
 			fontSize: "clamp(2rem, 7vw, 5rem)",
 			lineHeight: "1.2em",
+		},
+	},
+	{
+		id: "infinite-shadow",
+		title: "Animated Infinite Shadow",
+		description: "An animated long shadow effect.",
+		className: "long-shadow-effect inside-card",
+		hasAnimation: true,
+		backgroundColor: "#e9928bff",
+		initEffect: () => applyLongShadow(".long-shadow-effect", INFINITE_SHADOW_CONFIG),
+		restartEffect: () => {
+			const element = document.querySelector(".long-shadow-effect.inside-card");
+			if (element) applyLongShadow(".long-shadow-effect.inside-card", INFINITE_SHADOW_CONFIG);
+		},
+		code: `applyLongShadow(".long-shadow-effect", ${JSON.stringify(INFINITE_SHADOW_CONFIG, null, 2)});`,
+		textStyle: {
+			fontFamily: "'Pacifico', cursive",
+			fontSize: "clamp(2.5rem, 8vw, 6rem)",
 		},
 	}
 ];
