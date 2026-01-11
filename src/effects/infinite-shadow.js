@@ -188,7 +188,6 @@ export function applyLongShadow(selector, options = {}) {
                         boundaryHeight = rect.height;
                     } else {
                         // Fallback to viewport if element not found or doesn't contain text
-                        console.warn(`Boundary element "${config.boundaryElement}" not found or doesn't contain text element`);
                         boundaryWidth = window.innerWidth;
                         boundaryHeight = window.innerHeight;
                     }

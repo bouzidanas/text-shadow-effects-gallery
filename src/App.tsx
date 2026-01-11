@@ -141,13 +141,13 @@ const effects: EffectConfig[] = [
 		code: `applyLongShadow(".long-shadow-effect", ${JSON.stringify(INFINITE_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Pacifico', cursive",
-			fontSize: "6rem",
+			fontSize: "clamp(2.5rem, 8vw, 6rem)",
 		},
 	},
 	{
 		id: "web-api-animated-striped-shadow",
 		title: "Dynamic Striped Shadow",
-		description: "An animated striped shadow effect using Web Animations API.",
+		description: "An animated striped shadow effect.",
 		className: "striped-shadow-animated inside-card",
 		hasAnimation: true,
 		backgroundColor: "#d7cfc7ff",
@@ -159,7 +159,7 @@ const effects: EffectConfig[] = [
 		code: `applyWebApiAnimatedStripedShadow(".striped-shadow-animated", ${JSON.stringify(ANIMATED_STRIPED_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Titan One', sans-serif",
-			fontSize: "5rem",
+			fontSize: "clamp(2rem, 7vw, 5rem)",
 			lineHeight: "1.2em",
 		},
 	},
@@ -179,10 +179,10 @@ const effects: EffectConfig[] = [
 		code: `applyWebApiAnimatedStripedShadow(".layered-animated-striped-shadow", ${JSON.stringify(LAYERED_ANIMATED_STRIPED_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Fugaz One', sans-serif",
-			fontSize: "7rem",
+			fontSize: "clamp(2.5rem, 9vw, 7rem)",
 			lineHeight: "1.2em",
-			marginLeft: "8.5rem",
-			marginRight: "6rem",
+			marginLeft: "clamp(2rem, 12vw, 8.5rem)",
+			marginRight: "clamp(1.5rem, 8vw, 6rem)",
 			marginTop: "1rem",
 			marginBottom: 0,
 		},
@@ -197,7 +197,7 @@ const effects: EffectConfig[] = [
 		code: `applyStripedShadow(".layered-striped-shadow-effect", ${JSON.stringify(LAYERED_STRIPED_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Fugaz One', sans-serif",
-			fontSize: "8rem",
+			fontSize: "clamp(2.5rem, 10vw, 8rem)",
 			lineHeight: "1.2em"
 		},
 		cardClassName: "with-grain",
@@ -212,7 +212,7 @@ const effects: EffectConfig[] = [
 		code: `applyStripedShadow(".striped-shadow-effect-one", ${JSON.stringify(ONE_STRIP_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Titan One', sans-serif",
-			fontSize: "5rem",
+			fontSize: "clamp(2rem, 7vw, 5rem)",
 			lineHeight: "1.2em",
 		},
 	},
@@ -226,7 +226,7 @@ const effects: EffectConfig[] = [
 		code: `applyStripedShadow(".three-d-striped-shadow-effect", ${JSON.stringify(THREE_D_STRIPED_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Titan One', sans-serif",
-			fontSize: "5rem",
+			fontSize: "clamp(2rem, 7vw, 5rem)",
 			lineHeight: "1.2em",
 		},
 	},
@@ -240,7 +240,7 @@ const effects: EffectConfig[] = [
 		code: `applyStripedShadow(".outlined-striped-shadow-effect", ${JSON.stringify(OUTLINED_STRIPED_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Titan One', sans-serif",
-			fontSize: "5rem",
+			fontSize: "clamp(2rem, 7vw, 5rem)",
 			lineHeight: "1.2em",
 		},
 	},
@@ -254,7 +254,7 @@ const effects: EffectConfig[] = [
 		code: `applyStripedShadow(".striped-shadow-effect", ${JSON.stringify(STRIPED_SHADOW_CONFIG, null, 2)});`,
 		textStyle: {
 			fontFamily: "'Titan One', sans-serif",
-			fontSize: "5rem",
+			fontSize: "clamp(2rem, 7vw, 5rem)",
 			lineHeight: "1.2em",
 		},
 	}

@@ -91,6 +91,12 @@ export function applyStripedShadow(selector, options = {}) {
             drop-shadow(-${t}px ${t}px 0 ${c})
         `.trim();
 
+        // Fixed internal reference font size - all shadow thicknesses are designed for this size
+        const referenceFontSize = 80; // 5rem at default 16px base
+        
+        // Calculate base scale factor from actual rendered font size
+        let baseScaleFactor = parseFloat(getComputedStyle(element).fontSize) / referenceFontSize;
+
         // ==========================================================================
         // 3. CORE LOGIC
         // ==========================================================================
@@ -129,7 +135,7 @@ export function applyStripedShadow(selector, options = {}) {
             // Use layer-based approach like animated version
             for (let i = 0; i < config.stripeColors.length; i++) {
                 const color = config.stripeColors[i];
-                const thickness = config.stripeThicknesses[i % config.stripeThicknesses.length] || 0;
+                const thickness = (config.stripeThicknesses[i % config.stripeThicknesses.length] || 0) * baseScaleFactor;
                 const angleIndex = i % angleArray.length;
                 const rad = angleArray[angleIndex] * (Math.PI / 180);
                 
@@ -164,6 +170,20 @@ export function applyStripedShadow(selector, options = {}) {
         // 4. EXECUTION
         // ==========================================================================
         updateShadow();
+        
+        // Use ResizeObserver to detect when text size changes
+        let resizeTimeout;
+        const resizeObserver = new ResizeObserver(() => {
+            const newComputedFontSize = parseFloat(getComputedStyle(element).fontSize);
+            const newBaseScaleFactor = newComputedFontSize / referenceFontSize;
+            
+            if (Math.abs(newBaseScaleFactor - baseScaleFactor) > 0.01) {
+                baseScaleFactor = newBaseScaleFactor;
+                updateShadow();
+            }
+        });
+        
+        resizeObserver.observe(element);
         
         return {
             update: updateShadow,

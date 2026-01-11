@@ -37,15 +37,15 @@ export function applyStripedShadow(selector, options = {}) {
     }
 
     injectStyles();
-    
+
     document.querySelectorAll(selector).forEach((element, elementIndex) => {
         // Add a class to the container element for styling
         element.classList.add('striped-shadow-animated-container');
-        
+
         // Add a unique identifier to this instance
         const instanceId = `instance-${Date.now()}-${elementIndex}`;
         element.dataset.instanceId = instanceId;
-        
+
         const defaults = {
             angles: 30, // single angle or array [30, 45, 60] for multi-directional shadows
             textOutlineThickness: 2,
@@ -64,7 +64,7 @@ export function applyStripedShadow(selector, options = {}) {
         };
 
         const config = { ...defaults, ...options };
-        
+
         // Normalize stripeThicknesses: if single number, repeat for each color
         if (typeof config.stripeThicknesses === 'number') {
             config.stripeThicknesses = Array(config.stripeColors.length).fill(config.stripeThicknesses);
@@ -97,10 +97,10 @@ export function applyStripedShadow(selector, options = {}) {
                 ? t - config.textOutlineThickness
                 : 0
             )
-            : t-1? t-2:(t? t-1:t);
+            : t - 1 ? t - 2 : (t ? t - 1 : t);
         element.style.filter = `
             drop-shadow(${t}px 0 0 ${c}) 
-            drop-shadow(-${t-1? t-2:(t? t-1:t)}px 0 0 ${c}) 
+            drop-shadow(-${t - 1 ? t - 2 : (t ? t - 1 : t)}px 0 0 ${c}) 
             drop-shadow(0 ${t}px 0 ${c}) 
             drop-shadow(0 -${adjustedT}px 0 ${c})
             drop-shadow(${t}px ${t}px 0 ${c})
@@ -108,6 +108,12 @@ export function applyStripedShadow(selector, options = {}) {
             drop-shadow(${t}px -${t}px 0 ${c})
             drop-shadow(-${t}px ${t}px 0 ${c})
         `.trim();
+
+        // Fixed internal reference font size - all shadow thicknesses are designed for this size
+        const referenceFontSize = 80; // 5rem at default 16px base
+
+        // Calculate base scale factor from actual rendered font size
+        let baseScaleFactor = parseFloat(getComputedStyle(element).fontSize) / referenceFontSize;
 
         function sortSpansByAngle(spansArray) {
             // Normalize angles to array, use first angle for sorting
@@ -140,7 +146,9 @@ export function applyStripedShadow(selector, options = {}) {
             const shadowCache = new Map();
 
             allShadowSpans.forEach(span => {
-                const scale = parseFloat(getComputedStyle(span).getPropertyValue('--shadow-scale')) || 1;
+                // Calculate scale: cached base scale × multiplier from CSS variable (1 when static, 1→5→1 during animation)
+                const multiplier = parseFloat(getComputedStyle(span).getPropertyValue('--shadow-scale')) || 1;
+                const scale = baseScaleFactor * multiplier;
                 const cacheKey = Math.round(scale * 100);
 
                 if (shadowCache.has(cacheKey)) {
@@ -158,21 +166,21 @@ export function applyStripedShadow(selector, options = {}) {
                     const thickness = scaledThicknesses[i % scaledThicknesses.length] || 0;
                     const angleIndex = i % angleArray.length;
                     const rad = angleArray[angleIndex] * (Math.PI / 180);
-                    
+
                     // If step is 'auto', use the current stripe thickness as the step
                     const step = config.step === 'layer' ? thickness : config.step;
-                    
+
                     for (let j = step; j <= thickness; j += step) {
                         const x = Math.round(cumulativeX + Math.cos(rad) * j);
                         const y = Math.round(cumulativeY + Math.sin(rad) * j);
                         shadows.push(`${x}px ${y}px 0 ${color}`);
                     }
-                    
+
                     // Update cumulative position to continue from where this stripe ended
                     cumulativeX += Math.cos(rad) * thickness;
                     cumulativeY += Math.sin(rad) * thickness;
                 }
-                
+
                 const combinedShadow = shadows.join(',\n');
                 span.style.textShadow = combinedShadow;
                 shadowCache.set(cacheKey, combinedShadow);
@@ -192,10 +200,10 @@ export function applyStripedShadow(selector, options = {}) {
             const angleArray = Array.isArray(config.angles) ? config.angles : [config.angles];
             const primaryAngle = angleArray[0];
             const rad = primaryAngle * (Math.PI / 180);
-            
+
             // Determine the boundary for animation distance calculation
             let boundaryWidth, boundaryHeight;
-            
+
             if (config.boundaryElement === 'viewport') {
                 boundaryWidth = window.innerWidth;
                 boundaryHeight = window.innerHeight;
@@ -211,7 +219,7 @@ export function applyStripedShadow(selector, options = {}) {
             } else if (typeof config.boundaryElement === 'string') {
                 // Custom selector - search entire document
                 const boundaryEl = document.querySelector(config.boundaryElement);
-                
+
                 if (boundaryEl && (boundaryEl.contains(element) || boundaryEl === element)) {
                     // Element found and either contains or is the text element
                     const rect = boundaryEl.getBoundingClientRect();
@@ -219,7 +227,6 @@ export function applyStripedShadow(selector, options = {}) {
                     boundaryHeight = rect.height;
                 } else {
                     // Fallback to viewport if element not found or doesn't contain text
-                    console.warn(`Boundary element "${config.boundaryElement}" not found or doesn't contain text element`);
                     boundaryWidth = window.innerWidth;
                     boundaryHeight = window.innerHeight;
                 }
@@ -228,9 +235,9 @@ export function applyStripedShadow(selector, options = {}) {
                 boundaryWidth = window.innerWidth;
                 boundaryHeight = window.innerHeight;
             }
-            
+
             const elementRect = element.getBoundingClientRect();
-            const animationDistance = 0.6*(Math.hypot(boundaryWidth, boundaryHeight) + Math.hypot(elementRect.width, elementRect.height)) + 100;
+            const animationDistance = 0.6 * (Math.hypot(boundaryWidth, boundaryHeight) + Math.hypot(elementRect.width, elementRect.height)) + 100;
             const startX = Math.round(Math.cos(rad) * animationDistance);
             const startY = Math.round(Math.sin(rad) * animationDistance);
 
@@ -251,7 +258,7 @@ export function applyStripedShadow(selector, options = {}) {
                 // Frame 2: Make visible and start the animation
                 requestAnimationFrame(() => {
                     element.style.opacity = 1;
-
+                    console.log('Base scale factor at animation start:', baseScaleFactor.toFixed(3));
                     spansArray.forEach((span, index) => {
                         const keyframes = [
                             { transform: `translate(${startX}px, ${startY}px)`, offset: 0 },
@@ -272,8 +279,8 @@ export function applyStripedShadow(selector, options = {}) {
                                 { '--shadow-scale': config.motionScaleFactor },
                                 { '--shadow-scale': 1 }
                             ],
-                            { 
-                                duration: config.animationDuration, 
+                            {
+                                duration: config.animationDuration,
                                 delay: index * config.stagger,
                                 easing: 'ease-out',
                                 fill: 'forwards'
@@ -301,6 +308,25 @@ export function applyStripedShadow(selector, options = {}) {
 
         allShadowSpans.forEach(span => span.style.setProperty('--shadow-scale', '1'));
         updateShadow();
+
+        // Use ResizeObserver to detect when text size changes (not just window resize)
+        let resizeTimeout;
+        const resizeObserver = new ResizeObserver(() => {
+
+            const newComputedFontSize = parseFloat(getComputedStyle(element).fontSize);
+            const newBaseScaleFactor = newComputedFontSize / referenceFontSize;
+
+            // Only update if scale actually changed
+            if (Math.abs(newBaseScaleFactor - baseScaleFactor) > 0.01) {
+                baseScaleFactor = newBaseScaleFactor;
+                console.log(`Resize detected. New font size: ${newComputedFontSize}px, base scale factor: ${baseScaleFactor.toFixed(3)}`);
+
+                // Regenerate shadows - updateShadow will calculate scale from fontSize automatically
+                updateShadow();
+            }
+        });
+
+        resizeObserver.observe(element);
 
         if (config.animation) {
             playAnimation();
