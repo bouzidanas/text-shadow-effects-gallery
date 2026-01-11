@@ -258,7 +258,6 @@ export function applyStripedShadow(selector, options = {}) {
                 // Frame 2: Make visible and start the animation
                 requestAnimationFrame(() => {
                     element.style.opacity = 1;
-                    console.log('Base scale factor at animation start:', baseScaleFactor.toFixed(3));
                     spansArray.forEach((span, index) => {
                         const keyframes = [
                             { transform: `translate(${startX}px, ${startY}px)`, offset: 0 },
@@ -310,16 +309,13 @@ export function applyStripedShadow(selector, options = {}) {
         updateShadow();
 
         // Use ResizeObserver to detect when text size changes (not just window resize)
-        let resizeTimeout;
         const resizeObserver = new ResizeObserver(() => {
-
             const newComputedFontSize = parseFloat(getComputedStyle(element).fontSize);
             const newBaseScaleFactor = newComputedFontSize / referenceFontSize;
 
             // Only update if scale actually changed
             if (Math.abs(newBaseScaleFactor - baseScaleFactor) > 0.01) {
                 baseScaleFactor = newBaseScaleFactor;
-                console.log(`Resize detected. New font size: ${newComputedFontSize}px, base scale factor: ${baseScaleFactor.toFixed(3)}`);
 
                 // Regenerate shadows - updateShadow will calculate scale from fontSize automatically
                 updateShadow();

@@ -80,6 +80,7 @@ const ANIMATED_STRIPED_CONFIG = {
 	animationDuration: 1200,
 	motionScaleFactor: 5,
 	animation: true,
+	
 } as const;
 
 const LAYERED_ANIMATED_STRIPED_CONFIG = {
