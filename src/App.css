@@ -5,6 +5,21 @@
 	padding: 3rem 1.5rem;
 	max-width: 1200px;
 	margin: 0 auto;
+	transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    
+    /* Layout Setup for Transitions */
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+}
+
+.App.editor-mode {
+	padding: 0;
+	max-width: 100%; /* Use 100% instead of none for transition compatibility */
+	height: 100vh;
+	overflow: hidden;
+    justify-content: flex-start;
 }
 
 .App > h1 {
@@ -15,6 +30,21 @@
 	margin-bottom: 3rem;
 	letter-spacing: -0.03em;
 	font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    /* Transition props */
+    width: 100%;
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.App.editor-mode > h1 {
+    max-height: 0;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    overflow: hidden;
 }
 
 .effects-section {
@@ -32,6 +62,17 @@
 	padding-left: 0.5rem;
 	letter-spacing: -0.02em;
 	font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    max-height: 100px;
+    opacity: 1;
+    transition: all 0.5s ease;
+}
+
+.section-title.hidden {
+    max-height: 0;
+    margin: 0;
+    opacity: 0;
+    overflow: hidden;
 }
 
 .section-title::after {
@@ -41,6 +82,33 @@
 	background-color: #eaeef3;
 }
 
+/* Main Content Wrapper - Handles the Transition */
+.main-content-wrapper {
+	width: 100%;
+	transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    
+    /* Ensure consistent Flex layout */
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content-wrapper.shrunk {
+	width: 420px;
+	height: 100vh;
+	overflow-y: scroll;
+	padding: 2rem 2rem 2rem 3rem; 
+	background: transparent; 
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+    
+    align-items: flex-start;
+}
+
+.main-content-wrapper.shrunk::-webkit-scrollbar {
+	display: none;
+}
+
+/* Base Effect Card Styles */
 .effect-card {
 	background-color: #ffffff;
 	border-radius: 18px;
@@ -50,15 +118,19 @@
 	overflow: hidden;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 	border: 1px solid rgba(0, 0, 0, 0.06);
+	
+	width: 100%;
 	max-width: 1000px;
-	min-height: 500px;
+	min-height: 500px; 
+    
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	transition: all 0.3s ease;
 }
 
-.effect-card:hover {
+/* Normal Mode Hover */
+.main-content-wrapper:not(.shrunk) .effect-card:hover {
 	transform: translateY(-2px);
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
@@ -73,6 +145,7 @@
 	font-weight: 900;
 	margin-bottom: 1rem;
 	line-height: 1;
+	transition: font-size 0.3s ease;
 }
 
 .card-header {
@@ -107,7 +180,8 @@
 }
 
 .code-toggle,
-.restart-toggle {
+.restart-toggle,
+.edit-toggle {
 	background: transparent;
 	border: none;
 	border-radius: 12px;
@@ -123,17 +197,359 @@
 }
 
 .code-toggle:hover,
-.restart-toggle:hover {
+.restart-toggle:hover,
+.edit-toggle:hover {
 	background: rgba(0, 0, 0, 0.05);
 	color: #333;
 	transform: scale(1.05);
 }
 
-.code-toggle:active,
-.restart-toggle:active {
-	transform: scale(0.95);
+/* Shrunk Mode Styles (Sidebar) */
+.main-content-wrapper.shrunk .effect-card {
+    width: 280px;
+	min-height: 150px; 
+    height: auto;
+	padding: 1rem;
+	margin: 0 0 1.5rem 0; 
+	transform: scale(1); 
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transform-origin: left center;
 }
 
+.main-content-wrapper.shrunk .effect-card h2 {
+	font-size: 1.8rem !important; 
+    margin: 0;
+}
+
+.main-content-wrapper.shrunk .card-header {
+	display: none;
+}
+
+/* Selected Card in Sidebar */
+.main-content-wrapper.shrunk .effect-card.selected-card {
+	border: 3px solid #333;
+	transform: scale(1.1); 
+	z-index: 100;
+	box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    position: relative;
+    margin-left: 0;
+    margin-top: 10px;
+    margin-bottom: calc(1.5rem + 10px);
+}
+
+.main-content-wrapper.shrunk .section-title {
+    display: none;
+}
+
+.main-content-wrapper.shrunk .effects-section {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+
+/* Editor Container */
+.editor-container {
+	flex-grow: 1;
+	display: flex;
+	height: 100vh;
+	position: relative;
+	background-color: transparent; 
+    justify-content: center;
+
+    /* Transition Animation Properties */
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: center;
+    transition: 
+        opacity 0.4s ease,
+        transform 0.4s ease,
+        flex-grow 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+        width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+}
+
+.editor-container.closing {
+    opacity: 0;
+    flex-grow: 0.00001; /* Force layout collapse */
+    width: 0; /* Fallback */
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+.preview-area {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem;
+	overflow: hidden;
+    position: relative;
+    /* Ensure content doesn't break layout during collapse */
+    min-width: 600px; 
+}
+
+.preview-wrapper {
+    width: 100%;
+    /* Max width inherited from card constraints if needed, or flex container */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Limit width to card max-width to align actions */
+    max-width: 1000px; 
+}
+
+.preview-card {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    min-height: auto;
+    height: auto;
+    max-height: 80vh;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Remove bottom margin as wrapper handles spacing */
+    margin-bottom: 0;
+}
+
+.preview-card.has-overflow {
+    aspect-ratio: auto;
+    min-height: 50%;
+}
+
+.preview-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.action-btn {
+	background: transparent;
+	border: none;
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	color: #555;
+    padding: 0;
+}
+
+.action-btn:hover {
+	background: rgba(0, 0, 0, 0.05);
+	color: #333;
+    transform: scale(1.1);
+}
+
+.action-btn.disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+}
+
+
+.config-panel-area {
+	width: 350px; 
+	background: transparent;
+	border-left: none;
+	box-shadow: none;
+    
+	height: 100vh;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative; 
+}
+
+.close-editor-btn {
+	position: absolute;
+	top: 1.5rem;
+	left: 1.5rem;
+	z-index: 50;
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+	transition: all 0.2s ease;
+    color: #555;
+}
+
+.close-editor-btn:hover {
+    transform: scale(1.1);
+    color: #000;
+}
+
+/* Config Panel Styles */
+.config-panel {
+    height: 100%;
+    overflow-y: scroll; 
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.config-panel::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 100%;
+    color: #555;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: absolute;
+    left: 0;
+    pointer-events: none;
+}
+
+.scroll-indicator.visible {
+    opacity: 1;
+}
+
+.scroll-indicator.top {
+    top: 1rem;
+}
+
+.scroll-indicator.bottom {
+    bottom: 1rem;
+}
+
+.config-panel-area:hover .scroll-indicator.visible {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+
+.config-panel h3 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: #333;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    padding-bottom: 1rem;
+}
+
+.config-group {
+    margin-bottom: 2.5rem;
+}
+
+.config-group h4 {
+    margin: 0 0 1rem 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    font-weight: 700;
+}
+
+.config-item {
+    margin-bottom: 1.2rem;
+}
+
+.config-item label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.config-item input[type="text"],
+.config-item input[type="number"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.config-item input[type="text"]:focus,
+.config-item input[type="number"]:focus {
+    border-color: #333;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.config-item.checkbox-item label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.config-item.checkbox-item label:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0,0,0,0.1);
+}
+
+.config-item.checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #333;
+}
+
+.color-input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.color-input-wrapper input[type="color"] {
+    width: 50px;
+    height: 42px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: none;
+}
+
+.color-input-wrapper input[type="text"] {
+    flex-grow: 1;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Original Code Overlay Styles */
 .code-overlay {
 	position: absolute;
 	inset: 0;
@@ -249,4 +665,3 @@
 	mix-blend-mode: overlay;
 	z-index: 5;
 }
-

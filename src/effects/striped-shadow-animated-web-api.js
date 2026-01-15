@@ -38,6 +38,8 @@ export function applyStripedShadow(selector, options = {}) {
 
     injectStyles();
 
+    const cleanups = [];
+
     document.querySelectorAll(selector).forEach((element, elementIndex) => {
         // Add a class to the container element for styling
         element.classList.add('striped-shadow-animated-container');
@@ -107,7 +109,7 @@ export function applyStripedShadow(selector, options = {}) {
             drop-shadow(-${t}px -${t}px 0 ${c})
             drop-shadow(${t}px -${t}px 0 ${c})
             drop-shadow(-${t}px ${t}px 0 ${c})
-        `.trim();
+        ` .trim();
 
         // Fixed internal reference font size - all shadow thicknesses are designed for this size
         const referenceFontSize = 80; // 5rem at default 16px base
@@ -327,5 +329,15 @@ export function applyStripedShadow(selector, options = {}) {
         if (config.animation) {
             playAnimation();
         }
+
+        // Cleanup function for this element
+        cleanups.push(() => {
+            resizeObserver.disconnect();
+            animation.activeAnimations.forEach(anim => anim.cancel());
+        });
     });
+
+    return () => {
+        cleanups.forEach(cleanup => cleanup());
+    };
 }

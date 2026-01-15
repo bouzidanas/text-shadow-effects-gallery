@@ -31,6 +31,8 @@ export function applyStripedShadow(selector, options = {}) {
     }
 
     injectStyles();
+    
+    const cleanups = [];
         
     document.querySelectorAll(selector).forEach(element => {
         // Add a class to the container element for styling
@@ -185,9 +187,12 @@ export function applyStripedShadow(selector, options = {}) {
         
         resizeObserver.observe(element);
         
-        return {
-            update: updateShadow,
-            element: element
-        };
+        cleanups.push(() => {
+            resizeObserver.disconnect();
+        });
     });
+
+    return () => {
+        cleanups.forEach(cleanup => cleanup());
+    };
 }

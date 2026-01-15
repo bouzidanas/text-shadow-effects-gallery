@@ -91,6 +91,8 @@ export function applyLongShadow(selector, options = {}) {
     const startY = Math.round(Math.sin(rad) * animationDistance);
     document.documentElement.style.setProperty('--start-transform', `translate(${startX}px, ${startY}px)`);
 
+    const cleanups = [];
+
     document.querySelectorAll(selector).forEach(el => {
         el.classList.add('long-shadow-container');
         const text = el.textContent;
@@ -269,9 +271,18 @@ export function applyLongShadow(selector, options = {}) {
 
         // Debounce resize events to improve performance
         let resizeTimer;
-        window.addEventListener('resize', () => {
+        const onResize = () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(updateShadow, 100); // Only update shadow on resize
+        };
+        window.addEventListener('resize', onResize);
+        
+        cleanups.push(() => {
+            window.removeEventListener('resize', onResize);
         });
     });
+
+    return () => {
+        cleanups.forEach(cleanup => cleanup());
+    };
 }
