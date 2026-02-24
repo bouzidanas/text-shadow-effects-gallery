@@ -15,6 +15,7 @@ export function applyLongShadow(selector, options = {}) {
                 position: relative;
                 isolation: isolate;
                 visibility: hidden; /* Initially hide to prevent FOUC */
+                /* Filter applied to container (not per-span) via JS after animation */
             }
 
             .long-shadow-word {
@@ -22,16 +23,6 @@ export function applyLongShadow(selector, options = {}) {
                 display: inline-block;
                 opacity: 0; /* Initially invisible */
                 transform: var(--start-transform); /* Start off-screen, value set by JS */
-                /* Apply a filter to each word for the outline effect */
-                filter: 
-                    drop-shadow(calc(var(--shadow-outline-thickness) + 1px) 0 0 var(--shadow-outline-color)) 
-                    drop-shadow(calc(var(--shadow-outline-thickness) * -1) 0 0 var(--shadow-outline-color)) 
-                    drop-shadow(0 var(--shadow-outline-thickness) 0 var(--shadow-outline-color)) 
-                    drop-shadow(0 calc(var(--shadow-outline-thickness)*-1) 0 var(--shadow-outline-color))
-                    drop-shadow(var(--shadow-outline-thickness) var(--shadow-outline-thickness) 0 var(--shadow-outline-color))
-                    drop-shadow(calc(var(--shadow-outline-thickness) * -1) calc(var(--shadow-outline-thickness) * -1) 0 var(--shadow-outline-color))
-                    drop-shadow(var(--shadow-outline-thickness) calc(var(--shadow-outline-thickness) * -1) 0 var(--shadow-outline-color))
-                    drop-shadow(calc(var(--shadow-outline-thickness) * -1) var(--shadow-outline-thickness) 0 var(--shadow-outline-color));
             }
             @keyframes fly-in {
                 from {
@@ -229,12 +220,35 @@ export function applyLongShadow(selector, options = {}) {
         /**
          * Plays the staggered entrance animation for the words.
          */
+        function buildContainerFilter() {
+            const t = config.shadowOutlineThickness;
+            const c = config.shadowOutlineColor;
+            if (t === 0 || c === 'transparent') return '';
+            return `
+                drop-shadow(${t + 1}px 0 0 ${c})
+                drop-shadow(-${t}px 0 0 ${c})
+                drop-shadow(0 ${t}px 0 ${c})
+                drop-shadow(0 -${t}px 0 ${c})
+                drop-shadow(${t}px ${t}px 0 ${c})
+                drop-shadow(-${t}px -${t}px 0 ${c})
+                drop-shadow(${t}px -${t}px 0 ${c})
+                drop-shadow(-${t}px ${t}px 0 ${c})
+            `.trim();
+        }
+
         function playAnimation() {
             // The starting position is now set during initialization, so we don't need to set it here.
             let spansArray = Array.from(allShadowSpans);
 
+            // Remove filter during animation to avoid GPU thrash on mobile
+            longShadowContainer.style.filter = '';
+
             // Reset the animation by removing the class.
             spansArray.forEach(span => span.classList.remove('animate'));
+
+            // Track when all spans finish animating
+            let completedCount = 0;
+            const totalSpans = spansArray.length;
 
             // Use a timeout to ensure the browser processes the reset before starting the new animation.
             setTimeout(() => {
@@ -255,6 +269,15 @@ export function applyLongShadow(selector, options = {}) {
                         span.style.opacity = '1';
                         span.style.transform = 'translate(0, 0)';
                         span.classList.remove('animate');
+
+                        completedCount++;
+                        // Apply filter to container once all spans have finished
+                        if (completedCount === totalSpans) {
+                            const filterValue = buildContainerFilter();
+                            if (filterValue) {
+                                longShadowContainer.style.filter = filterValue;
+                            }
+                        }
                     }, { once: true });
                 });
             }, 10); // A small delay is crucial for the reset to work reliably.
@@ -276,11 +299,10 @@ export function applyLongShadow(selector, options = {}) {
         // Run the effect when the page loads.
         run();
 
-        // Debounce resize events to improve performance
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(updateShadow, 100); // Only update shadow on resize
+        // Use ResizeObserver instead of window resize to avoid mobile address bar triggers
+        const resizeObserver = new ResizeObserver(() => {
+            updateShadow();
         });
+        resizeObserver.observe(longShadowContainer);
     });
 }

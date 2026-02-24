@@ -98,25 +98,34 @@ export function applyStripedShadow(selector, options = {}) {
         element.style.webkitTextStroke = `${config.textOutlineThickness}px ${outlineColor}`;
         element.style.textStroke = `${config.textOutlineThickness}px ${outlineColor}`;
 
-        // Apply configurable outline filter
+        // Build outline filter string (skip entirely when no-op)
         const t = config.shadowOutlineThickness;
         const c = config.shadowOutlineColor;
-        const adjustedT = c === outlineColor
-            ? (t - config.textOutlineThickness >= 0
-                ? t - config.textOutlineThickness
-                : 0
-            )
-            : t - 1 ? t - 2 : (t ? t - 1 : t);
-        element.style.filter = `
-            drop-shadow(${t}px 0 0 ${c}) 
-            drop-shadow(-${t - 1 ? t - 2 : (t ? t - 1 : t)}px 0 0 ${c}) 
-            drop-shadow(0 ${t}px 0 ${c}) 
-            drop-shadow(0 -${adjustedT}px 0 ${c})
-            drop-shadow(${t}px ${t}px 0 ${c})
-            drop-shadow(-${t}px -${t}px 0 ${c})
-            drop-shadow(${t}px -${t}px 0 ${c})
-            drop-shadow(-${t}px ${t}px 0 ${c})
-        `.trim();
+        let filterValue = '';
+        if (t !== 0 && c !== 'transparent') {
+            const adjustedT = c === outlineColor
+                ? (t - config.textOutlineThickness >= 0
+                    ? t - config.textOutlineThickness
+                    : 0
+                )
+                : t - 1 ? t - 2 : (t ? t - 1 : t);
+            filterValue = `
+                drop-shadow(${t}px 0 0 ${c})
+                drop-shadow(-${t - 1 ? t - 2 : (t ? t - 1 : t)}px 0 0 ${c})
+                drop-shadow(0 ${t}px 0 ${c})
+                drop-shadow(0 -${adjustedT}px 0 ${c})
+                drop-shadow(${t}px ${t}px 0 ${c})
+                drop-shadow(-${t}px -${t}px 0 ${c})
+                drop-shadow(${t}px -${t}px 0 ${c})
+                drop-shadow(-${t}px ${t}px 0 ${c})
+            `.trim();
+        }
+
+        // Apply filter immediately only for non-animated cards;
+        // animated cards defer filter until animation completes to avoid GPU thrash
+        if (!config.animation && filterValue) {
+            element.style.filter = filterValue;
+        }
 
         // Fixed internal reference font size - all shadow thicknesses are designed for this size
         const referenceFontSize = 80; // 5rem at default 16px base
@@ -314,6 +323,11 @@ export function applyStripedShadow(selector, options = {}) {
                             animation.activeAnimations = [];
 
                             updateShadow();
+
+                            // Apply deferred filter now that animation is done
+                            if (filterValue) {
+                                element.style.filter = filterValue;
+                            }
                         }
                     }
                     requestAnimationFrame(shadowRenderLoop);
