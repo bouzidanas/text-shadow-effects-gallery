@@ -1,3 +1,6 @@
+// Track ResizeObservers per element to prevent accumulation on re-initialization
+const observerCleanupMap = new WeakMap();
+
 export function applyStripedShadow(selector, options = {}) {
     const STYLE_ID = 'striped-shadow-animated-styles';
 
@@ -39,6 +42,12 @@ export function applyStripedShadow(selector, options = {}) {
     injectStyles();
 
     document.querySelectorAll(selector).forEach((element, elementIndex) => {
+        // Clean up previous ResizeObserver and animations if re-initializing
+        const existingCleanup = observerCleanupMap.get(element);
+        if (existingCleanup) {
+            existingCleanup();
+        }
+
         // Add a class to the container element for styling
         element.classList.add('striped-shadow-animated-container');
 
@@ -297,6 +306,13 @@ export function applyStripedShadow(selector, options = {}) {
                                 span.style.removeProperty('--shadow-scale'); // Remove CSS variable entirely
                                 span.style.transform = ''; // Clear the transform after animation
                             });
+
+                            // Cancel all WAAPI animations to release compositing layers.
+                            // fill: 'forwards' keeps Animation objects alive and promotes spans
+                            // to GPU layers even after finishing, which causes scroll jank on mobile.
+                            animation.activeAnimations.forEach(anim => anim.cancel());
+                            animation.activeAnimations = [];
+
                             updateShadow();
                         }
                     }
@@ -323,6 +339,13 @@ export function applyStripedShadow(selector, options = {}) {
         });
 
         resizeObserver.observe(element);
+
+        // Store cleanup function so re-initialization doesn't leak observers/animations
+        observerCleanupMap.set(element, () => {
+            resizeObserver.disconnect();
+            animation.activeAnimations.forEach(anim => anim.cancel());
+            animation.activeAnimations = [];
+        });
 
         if (config.animation) {
             playAnimation();

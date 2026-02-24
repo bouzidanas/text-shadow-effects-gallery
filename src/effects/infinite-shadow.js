@@ -247,6 +247,15 @@ export function applyLongShadow(selector, options = {}) {
                 spansArray.forEach((span, index) => {
                     span.style.animationDelay = `${index * config.stagger}ms`;
                     span.classList.add('animate');
+
+                    // After animation finishes, commit final styles and remove the CSS animation.
+                    // animation-fill-mode: forwards keeps the animation active and promotes the
+                    // span to a compositing layer, which causes scroll jank on mobile GPUs.
+                    span.addEventListener('animationend', () => {
+                        span.style.opacity = '1';
+                        span.style.transform = 'translate(0, 0)';
+                        span.classList.remove('animate');
+                    }, { once: true });
                 });
             }, 10); // A small delay is crucial for the reset to work reliably.
         }

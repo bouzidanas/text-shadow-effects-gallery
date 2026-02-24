@@ -39,14 +39,18 @@ export default function EffectCard({
 	const toggleCode = () => setShowCode((prev) => !prev);
 	const closeCode = () => setShowCode(false);
 
-	const handleMouseEnter = () => {
+	const handlePointerEnter = (e: React.PointerEvent) => {
+		// Only restart on mouse hover, not touch — touch-based scrolling on mobile
+		// can trigger pointer enter events during scroll, causing expensive
+		// re-initialization that blocks the main thread and causes scroll jank.
+		if (e.pointerType !== 'mouse') return;
 		if (hasAnimation && onRestart) {
 			onRestart();
 		}
 	};
 
 	return (
-		<div className={`effect-card ${cardClassName || ''}`} style={{ backgroundColor, ...cardStyle }} onMouseEnter={handleMouseEnter}>
+		<div className={`effect-card ${cardClassName || ''}`} style={{ backgroundColor, ...cardStyle }} onPointerEnter={handlePointerEnter}>
 			<div className="card-header">
 				<p className="effect-description">{description}</p>
 				<div className="card-actions">
