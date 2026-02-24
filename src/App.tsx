@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import EffectCard from "./components/EffectCard";
 import { applyLongShadow } from "./effects/infinite-shadow.js";
 import { applyStripedShadow as applyStripedShadowSimplified } from "./effects/striped-shadow-simplified.js";
@@ -264,9 +265,70 @@ const effects: EffectConfig[] = [
 const staticEffects = effects.filter(effect => !effect.hasAnimation);
 const animatedEffects = effects.filter(effect => effect.hasAnimation);
 
+const DEBUG_TOGGLES = [
+	{ id: "debug-hide-infinite", label: "Hide Infinite Shadow", bodyClass: "debug-hide-infinite" },
+	{ id: "debug-no-text-shadows", label: "No Text Shadows", bodyClass: "debug-no-text-shadows" },
+	{ id: "debug-no-filters", label: "No Filters", bodyClass: "debug-no-filters" },
+	{ id: "debug-containment", label: "CSS Containment", bodyClass: "debug-containment" },
+	{ id: "debug-no-hover", label: "No Hover Effects", bodyClass: "debug-no-hover" },
+] as const;
+
+function DebugPanel() {
+	const [collapsed, setCollapsed] = useState(true);
+	const [activeToggles, setActiveToggles] = useState<Set<string>>(new Set());
+
+	const handleToggle = useCallback((bodyClass: string) => {
+		setActiveToggles(prev => {
+			const next = new Set(prev);
+			if (next.has(bodyClass)) {
+				next.delete(bodyClass);
+				document.body.classList.remove(bodyClass);
+			} else {
+				next.add(bodyClass);
+				document.body.classList.add(bodyClass);
+			}
+			return next;
+		});
+	}, []);
+
+	// Clean up body classes on unmount
+	useEffect(() => {
+		return () => {
+			DEBUG_TOGGLES.forEach(t => document.body.classList.remove(t.bodyClass));
+		};
+	}, []);
+
+	return (
+		<div className={`debug-panel ${collapsed ? "debug-panel--collapsed" : ""}`}>
+			<button
+				className="debug-panel__tab"
+				onClick={() => setCollapsed(c => !c)}
+			>
+				{collapsed ? "DEBUG" : "X"}
+			</button>
+			{!collapsed && (
+				<div className="debug-panel__content">
+					<p className="debug-panel__hint">Enable one at a time, then scroll fast.</p>
+					{DEBUG_TOGGLES.map(toggle => (
+						<button
+							key={toggle.id}
+							className={`debug-panel__toggle ${activeToggles.has(toggle.bodyClass) ? "debug-panel__toggle--active" : ""}`}
+							onClick={() => handleToggle(toggle.bodyClass)}
+						>
+							{toggle.label}
+						</button>
+					))}
+				</div>
+			)}
+		</div>
+	);
+}
+
 function App() {
+	const showDebug = new URLSearchParams(window.location.search).has("debug");
 	return (
 		<div className="App">
+			{showDebug && <DebugPanel />}
 			{/* <h1>Text Shadow Effects Gallery</h1> */}
 			<h1>TEXT SHADOW EFFECTS GALLERY</h1>
 
