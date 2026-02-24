@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import EffectCard from "./components/EffectCard";
-import { applyLongShadow } from "./effects/infinite-shadow.js";
+// import { applyLongShadow } from "./effects/infinite-shadow.js";
 import { applyStripedShadow as applyStripedShadowSimplified } from "./effects/striped-shadow-simplified.js";
 import { applyStripedShadow as applyWebApiAnimatedStripedShadow } from "./effects/striped-shadow-animated-web-api.js";
 import "./App.css";
@@ -20,21 +20,21 @@ interface EffectConfig {
 	cardClassName?: string;
 }
 
-const INFINITE_SHADOW_CONFIG = {
-	angle: 45,
-	textColor: "#ed40fdff",
-	shadowColor: "#c52f2fff",
-	shadowOutlineColor: "black",
-	shadowOutlineThickness: 2,
-	textOutlineColor: "black",
-	textStrokeThickness: 2,
-	shadowLength: 150,
-	stagger: 300,
-	sortByAngle: false,
-	infiniteShadow: true,
-	maxShadowLayers: 500,
-	boundaryElement: '.effect-card:has(.long-shadow-effect)',
-} as const;
+// const INFINITE_SHADOW_CONFIG = {
+// 	angle: 45,
+// 	textColor: "#ed40fdff",
+// 	shadowColor: "#c52f2fff",
+// 	shadowOutlineColor: "black",
+// 	shadowOutlineThickness: 2,
+// 	textOutlineColor: "black",
+// 	textStrokeThickness: 2,
+// 	shadowLength: 150,
+// 	stagger: 300,
+// 	sortByAngle: false,
+// 	infiniteShadow: true,
+// 	maxShadowLayers: 500,
+// 	boundaryElement: '.effect-card:has(.long-shadow-effect)',
+// } as const;
 
 const STRIPED_SHADOW_CONFIG = {
 	angles: 220,
@@ -242,24 +242,24 @@ const effects: EffectConfig[] = [
 			lineHeight: "1.2em",
 		},
 	},
-	{
-		id: "infinite-shadow",
-		title: "Animated Infinite Shadow",
-		description: "An animated long shadow effect.",
-		className: "long-shadow-effect inside-card",
-		hasAnimation: true,
-		backgroundColor: "#e9928bff",
-		initEffect: () => applyLongShadow(".long-shadow-effect", INFINITE_SHADOW_CONFIG),
-		restartEffect: () => {
-			const element = document.querySelector(".long-shadow-effect.inside-card");
-			if (element) applyLongShadow(".long-shadow-effect.inside-card", INFINITE_SHADOW_CONFIG);
-		},
-		code: `applyLongShadow(".long-shadow-effect", ${JSON.stringify(INFINITE_SHADOW_CONFIG, null, 2)});`,
-		textStyle: {
-			fontFamily: "'Pacifico', cursive",
-			fontSize: "clamp(2.5rem, 8vw, 6rem)",
-		},
-	}
+	// {
+	// 	id: "infinite-shadow",
+	// 	title: "Animated Infinite Shadow",
+	// 	description: "An animated long shadow effect.",
+	// 	className: "long-shadow-effect inside-card",
+	// 	hasAnimation: true,
+	// 	backgroundColor: "#e9928bff",
+	// 	initEffect: () => applyLongShadow(".long-shadow-effect", INFINITE_SHADOW_CONFIG),
+	// 	restartEffect: () => {
+	// 		const element = document.querySelector(".long-shadow-effect.inside-card");
+	// 		if (element) applyLongShadow(".long-shadow-effect.inside-card", INFINITE_SHADOW_CONFIG);
+	// 	},
+	// 	code: `applyLongShadow(".long-shadow-effect", ${JSON.stringify(INFINITE_SHADOW_CONFIG, null, 2)});`,
+	// 	textStyle: {
+	// 		fontFamily: "'Pacifico', cursive",
+	// 		fontSize: "clamp(2.5rem, 8vw, 6rem)",
+	// 	},
+	// }
 ];
 
 const staticEffects = effects.filter(effect => !effect.hasAnimation);
